@@ -74,6 +74,24 @@ impl EndpointSpec for CreateZone<'_> {
     }
 }
 
+/// Delete Zone
+/// https://api.cloudflare.com/#zone-delete-zone
+pub struct DeleteZone<'a> {
+    pub identifier: &'a str,
+}
+impl<'a> EndpointSpec for DeleteZone<'a> {
+    type JsonResponse = ();
+    type ResponseType = ApiSuccess<Self::JsonResponse>;
+
+    fn method(&self) -> Method {
+        Method::DELETE
+    }
+
+    fn path(&self) -> String {
+        format!("zones/{}", self.identifier)
+    }
+}
+
 #[derive(Serialize, Clone, Debug, Default)]
 pub struct CreateZoneParams<'a> {
     pub name: &'a str,
