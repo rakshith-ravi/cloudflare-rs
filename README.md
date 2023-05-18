@@ -1,4 +1,7 @@
 # cloudflare-rs
+
+FUCK GITHUB APP
+
 > Rust library for the Cloudflare v4 API
 
 [![cloudflare's crates.io badge](https://img.shields.io/crates/v/cloudflare.svg)](https://crates.io/crates/cloudflare)
