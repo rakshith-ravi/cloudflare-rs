@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 use crate::framework::endpoint::RequestBody;
@@ -31,7 +33,7 @@ impl EndpointSpec for ExecuteModel<'_> {
     }
 
     #[inline]
-    fn body(&self) -> Option<RequestBody> {
+    fn body(&self) -> Option<RequestBody<'_>> {
         let body = serde_json::to_string(&self.params).unwrap();
         Some(RequestBody::Json(body))
     }
@@ -320,12 +322,12 @@ pub enum MessageRole {
     Assistant,
 }
 
-impl ToString for MessageRole {
-    fn to_string(&self) -> String {
+impl Display for MessageRole {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            MessageRole::System => "System".to_string(),
-            MessageRole::User => "User".to_string(),
-            MessageRole::Assistant => "Assistant".to_string(),
+            MessageRole::System => write!(f, "System"),
+            MessageRole::User => write!(f, "User"),
+            MessageRole::Assistant => write!(f, "Assistant"),
         }
     }
 }
