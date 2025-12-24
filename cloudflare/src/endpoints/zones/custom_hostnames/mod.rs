@@ -3,13 +3,18 @@ use std::collections::BTreeMap;
 use crate::framework::response::ApiResult;
 
 /// The route to add a custom hostname to a zone
-pub mod add_custom_hostname;
+mod add_custom_hostname;
 /// The route to get custom hostname details
-pub mod custom_hostname_details;
+mod custom_hostname_details;
 /// The route to delete a custom hostname
-pub mod delete_custom_hostname;
+mod delete_custom_hostname;
 /// The route to edit a custom hostname
-pub mod edit_custom_hostname;
+mod edit_custom_hostname;
+
+pub use self::{
+    add_custom_hostname::*, custom_hostname_details::*, delete_custom_hostname::*,
+    edit_custom_hostname::*,
+};
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct CustomHostnameOnlyId {
@@ -26,6 +31,7 @@ pub struct CustomHostname {
     pub custom_metadata: Option<BTreeMap<String, String>>,
     pub ownership_verification: Option<OwnershipVerification>,
     pub ownership_verification_http: Option<OwnershipVerificationHttp>,
+    pub status: String,
 }
 
 impl ApiResult for CustomHostname {}
@@ -38,10 +44,13 @@ pub struct CustomHostnameSsl {
     pub type_: Option<CustomHostnameSslType>,
     pub method: Option<CustomHostnameSslMethod>,
     pub settings: Option<BTreeMap<String, String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub validation_records: Option<Vec<CustomHostnameSslValidationRecord>>,
     pub wildcard: Option<bool>,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum CustomHostnameSslBundleMethod {
     Ubiquitous,
     Optimal,
@@ -49,19 +58,24 @@ pub enum CustomHostnameSslBundleMethod {
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum CustomHostnameSslCertificateAuthority {
     Digicert,
     Google,
+    #[serde(rename = "lets_encrypt")]
     LetsEncrypt,
+    #[serde(rename = "ssl_com")]
     SslCom,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum CustomHostnameSslType {
     DV,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum CustomHostnameSslMethod {
     Http,
     Txt,
@@ -80,4 +94,13 @@ pub struct OwnershipVerification {
 pub struct OwnershipVerificationHttp {
     pub http_body: String,
     pub http_url: String,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+pub struct CustomHostnameSslValidationRecord {
+    pub emails: Option<Vec<String>>,
+    pub http_body: Option<String>,
+    pub http_url: Option<String>,
+    pub txt_name: Option<String>,
+    pub txt_value: Option<String>,
 }

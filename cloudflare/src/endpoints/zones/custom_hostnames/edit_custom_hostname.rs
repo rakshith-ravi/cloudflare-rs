@@ -37,8 +37,12 @@ impl EndpointSpec for EditCustomHostname<'_> {
 
 #[derive(serde::Serialize, Debug, Clone)]
 pub struct EditCustomHostnameParams {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_metadata: Option<BTreeMap<String, String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_origin_server: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub custom_origin_sni: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssl: Option<CustomHostnameSsl>,
 }
