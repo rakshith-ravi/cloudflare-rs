@@ -47,6 +47,7 @@ pub struct CustomHostnameSsl {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub validation_records: Option<Vec<CustomHostnameSslValidationRecord>>,
     pub wildcard: Option<bool>,
+    pub status: Option<String>,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
